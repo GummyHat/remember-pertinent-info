@@ -3,42 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A brief description of your page content.">
+    <meta name="description" content="A web app to help facilitate the learning of various topics.">
     
     <title>Remember Pertinent Info</title>
     
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <header>
-        <img src="images/logo.png" alt="Remember Pertinent Info Logo" class="logo">
-
-        <h1>Remember Pertinent Info</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <a href="#" class="logo-link">
+                <img src="images/logo.png" alt="Remember Pertinent Info Logo" class="logo">
+                <h1>Remember Pertinent Info</h1>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main>
-        <h2>Welcome!</h2>
-        <p>Our vision is to produce a web app that will help facilitate the learning of various topics. 
-            This will be done via modules and other systems that will allow educators to set their students up for success. 
-            The platform should be easy for professors to utilize, and will allow the professors to post content which will 
-            help students familiarize themselves with course materials, or brush up on course content and gauge their preparedness 
-            on prerequisites.</p>
+        <div class="container">
+            <div class="welcome-card">
+                <h2>Welcome!</h2>
+                <p>Our vision is to produce a web app that will help facilitate the learning of various topics. 
+                    This will be done via modules and other systems that will allow educators to set their students up for success. 
+                    The platform should be easy for professors to utilize, and will allow the professors to post content which will 
+                    help students familiarize themselves with course materials, or brush up on course content and gauge their preparedness 
+                    on prerequisites.</p>
+            </div>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; RCOS 2025</p>
+        <p>&copy; 2025 RCOS. All rights reserved.</p>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
