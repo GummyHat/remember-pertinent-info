@@ -1,10 +1,30 @@
+/* Define color variables for both themes */
+:root {
+    --bg-color: #f4f7f6;
+    --text-color: #333;
+    --header-bg: #ffffff;
+    --card-bg: #ffffff;
+    --primary-color: #007bff;
+    --shadow-color: rgba(0,0,0,0.1);
+}
+
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --header-bg: #1e1e1e;
+    --card-bg: #1e1e1e;
+    --primary-color: #00aaff;
+    --shadow-color: rgba(255, 255, 255, 0.1);
+}
+
 /* General Body Styles */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
@@ -15,12 +35,13 @@ body {
 
 /* Header and Navigation */
 header {
-    background: #ffffff;
+    background: var(--header-bg);
     padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px var(--shadow-color);
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: background-color 0.3s ease;
 }
 
 header .container {
@@ -33,7 +54,7 @@ header .container {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #333;
+    color: var(--text-color);
 }
 
 .logo {
@@ -58,13 +79,13 @@ header nav ul {
 
 header nav a {
     text-decoration: none;
-    color: #555;
+    color: var(--text-color);
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 header nav a:hover {
-    color: #007bff;
+    color: var(--primary-color);
 }
 
 /* Main Content */
@@ -73,18 +94,19 @@ main {
 }
 
 .welcome-card {
-    background: #ffffff;
+    background: var(--card-bg);
     padding: 40px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px var(--shadow-color);
     text-align: center;
+    transition: background-color 0.3s ease;
 }
 
 .welcome-card h2 {
     font-size: 2.5rem;
     font-weight: 700;
     margin-top: 0;
-    color: #007bff;
+    color: var(--primary-color);
 }
 
 .welcome-card p {
@@ -100,4 +122,26 @@ footer {
     margin-top: 40px;
     background: #333;
     color: #fff;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--header-bg);
 }
