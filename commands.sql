@@ -30,8 +30,8 @@ CREATE TABLE sections (
 CREATE TABLE timeslots (
   id SERIAL PRIMARY KEY,
   section_id INT NOT NULL REFERENCES sections(id) ON DELETE CASCADE,
-  date_start TEXT,       -- Course start date
-  date_end TEXT,
+  date_start TEXT,       -- course start date
+  date_end TEXT,         -- course end date
   days TEXT[],           -- array of day codes, like ["M","T","W","R","F"]
   instructor TEXT,
   location TEXT,
