@@ -118,6 +118,35 @@ main {
     margin: 0 auto;
 }
 
+/* --- NEW: Course Catalog Styles --- */
+.course-card {
+    background: var(--card-bg); /* Uses your card background variable */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow-color); /* Uses your shadow variable */
+    margin-top: 25px; /* Adds space between cards */
+    transition: background-color 0.3s ease;
+    text-align: left; /* Aligns text to the left for readability */
+}
+
+.course-card h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-top: 0;
+    color: var(--primary-color); /* Uses your primary color for titles */
+}
+
+.section {
+    margin-top: 15px;
+    padding-left: 15px;
+    border-left: 3px solid var(--primary-color); /* Adds an accent line */
+}
+
+.section p {
+    margin: 5px 0; /* Tighter spacing for section details */
+}
+
+
 /* Footer */
 footer {
     text-align: center;
