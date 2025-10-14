@@ -444,7 +444,6 @@
 
         // QUACS Data URLs - fetches live course data from GitHub
         const QUACS_BASE = 'https://raw.githubusercontent.com/quacs/quacs-data/master';
-        const LATEST_SEMESTER = '202501'; // Spring 2025 - update this for new semesters
 
         // ============================================================================
         // GLOBAL STATE
@@ -454,7 +453,7 @@
         let coursesData = {};        // All courses mapped by course ID (e.g., "CSCI-1200")
         let catalogData = {};        // Course descriptions and metadata
         let prerequisitesData = {};  // Prerequisites mapped by CRN
-        let currentSemester = LATEST_SEMESTER;
+        let currentSemester = null;  // Will be auto-detected from QUACS
         let searchTimeout;           // Debounce timer for search
 
         // ============================================================================
@@ -471,28 +470,76 @@
         }
 
         /**
-         * Load available semesters into dropdown
-         * TODO: Fetch this dynamically from QUACS API
+         * Load available semesters dynamically from QUACS semester_data directory
+         * Fetches the list of all available semesters and auto-selects the most recent
          */
         async function loadSemesterList() {
-            // TODO: Currently hardcoded - This should be made to live update
-            const semesters = [
-                { code: '202501', name: 'Spring 2025' },
-                { code: '202409', name: 'Fall 2024' },
-                { code: '202405', name: 'Summer 2024' },
-                { code: '202401', name: 'Spring 2024' },
-                { code: '202309', name: 'Fall 2023' }
-            ];
+            try {
+                // Fetch the directory listing from GitHub API
+                const response = await fetch('https://api.github.com/repos/quacs/quacs-data/contents/semester_data');
+                if (!response.ok) throw new Error('Failed to fetch semester list');
 
-            const select = document.getElementById('semester-select');
-            select.innerHTML = semesters.map(s =>
-                `<option value="${s.code}" ${s.code === currentSemester ? 'selected' : ''}>${s.name}</option>`
-            ).join('');
+                const folders = await response.json();
 
-            select.addEventListener('change', async (e) => {
-                currentSemester = e.target.value;
-                await loadData(currentSemester);
-            });
+                // Extract semester codes from folder names and sort in descending order (newest first)
+                const semesters = folders
+                    .filter(item => item.type === 'dir' && /^\d{6}$/.test(item.name))
+                    .map(item => ({
+                        code: item.name,
+                        name: formatSemesterName(item.name)
+                    }))
+                    .sort((a, b) => b.code.localeCompare(a.code)); // Sort newest first
+
+                if (semesters.length === 0) {
+                    throw new Error('No semesters found');
+                }
+
+                // Auto-select the most recent semester
+                currentSemester = semesters[0].code;
+
+                const select = document.getElementById('semester-select');
+                select.innerHTML = semesters.map(s =>
+                    `<option value="${s.code}" ${s.code === currentSemester ? 'selected' : ''}>${s.name}</option>`
+                ).join('');
+
+                select.addEventListener('change', async (e) => {
+                    currentSemester = e.target.value;
+                    await loadData(currentSemester);
+                });
+
+            } catch (error) {
+                console.error('Error loading semester list:', error);
+                // Fallback to hardcoded list if API fails
+                const semesters = [
+                    { code: '202501', name: 'Spring 2025' },
+                    { code: '202409', name: 'Fall 2024' }
+                ];
+                currentSemester = semesters[0].code;
+
+                const select = document.getElementById('semester-select');
+                select.innerHTML = semesters.map(s =>
+                    `<option value="${s.code}">${s.name}</option>`
+                ).join('');
+            }
+        }
+
+        /**
+         * Format semester code into readable name
+         * @param {string} code - Semester code (e.g., "202501")
+         * @returns {string} Formatted name (e.g., "Spring 2025")
+         */
+        function formatSemesterName(code) {
+            const year = code.substring(0, 4);
+            const term = code.substring(4, 6);
+
+            const termNames = {
+                '01': 'Spring',
+                '05': 'Summer',
+                '09': 'Fall',
+                '12': 'Winter'
+            };
+
+            return `${termNames[term] || 'Unknown'} ${year}`;
         }
 
         // ============================================================================
