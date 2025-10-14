@@ -1,82 +1,185 @@
-# **Remember Pertinent Information**
+# Remember Pertinent Info - RPI Course Prerequisite Tree
 
-Version 2 \- Fall 2025
+A web application that helps RPI students visualize course prerequisites and explore course information.
 
-## Vision:
+## 🚀 Quick Start (Simple - No Setup Required!)
 
-Our vision is to produce a web app that will help facilitate the learning of various topics. This will be done via modules and other systems that will allow educators to set their students up for success. The platform should be easy for professors to utilize, and will allow the professors to post content which will help students familiarize themselves with course materials, or brush up on course content and gauge their preparedness on prerequisites.
+```bash
+./start.sh
+```
 
-## Stack:
+That's it! The website opens automatically with live data from QUACS.
 
-* HTML  
-* CSS/Tailwind  
-* React/TS  
-* MongoDB?  
-* PostgreSQL
+## ✨ Features
 
-## Semester Specific Goals:
+- **Interactive Prerequisite Tree** - Visual display of course prerequisites
+- **Live QUACS Data** - Automatically fetches current course data from GitHub
+- **Complete Course Information** - View all details: CRN, sections, instructors, times, seats
+- **Smart Search** - Find courses by code or name
+- **Multiple Semesters** - Switch between Spring 2025, Fall 2024, etc.
+- **No Database Required** - Works entirely in your browser
 
-Our first step is to  analyze and interface with the Course Scaffold website from a previous RCOS project. It is defunct, and if we can get it up and running we could potentially utilize it as a baseline user interface tool and database to build our project from.
+## 📖 How to Use
 
-If we are unable to get a working version of the Course Scaffold website, our next step will be to build our own course framework and user interface. 
+1. **Run the app:**
+   ```bash
+   ./start.sh
+   ```
 
-The next step once we have created a functional course framework with a user interface is to allow for user posts, such as quizzes, videos, and text-based posts.
+2. **Search for a course:**
+   - Type in the search box: "CSCI-1200" or "Data Structures"
+   - Click on a course from the results
 
-Finally, we will ensure that our database accurately and dynamically reflects RPI course offerings, and work on polishing the look of the project to be appealing to users. We will reach out to professors and encourage them to utilize the resource, additionally seeking end user feedback from their experiences to improve the project.
+3. **Explore the prerequisite tree:**
+   - See what courses you need first
+   - Prerequisites are shown recursively
+   - Click any course node for full details
 
-## Milestones:
+4. **View complete course data:**
+   - Click any course in the tree
+   - See all sections, times, instructors, seats
+   - Check seat availability with color-coded badges
 
-### By the Beginning of October:
+## 🎯 Example Searches
 
-* Create a logo for our project  
-* Give our project a name  
-* Recover any code and data from the previous project  
-* Repair any code found to create a basic starting point
+Try these courses to see different prerequisite patterns:
+- `CSCI-1200` - Data Structures (has CSCI-1100 prerequisite)
+- `MATH-2400` - Differential Equations (has calculus prerequisites)
+- `ECSE-2660` - Computer Architecture (multiple prerequisites)
+- `PHYS-1200` - Physics II (OR prerequisites)
 
-### By Mid-November
+## 📂 Project Structure
 
-* Gather data on skills, concepts, etc., from RPI’s existing databases  
-* Produce a functional backend that can utilize scraped data and convert it for use within our own project.  
-  * Using PostgreSQL for the database  
-  * The course database from QUACS will be scraped to form a base tree structure that will be built upon using a few different ADTs.  
-    * Courses: A course ADT will include resources for a particular course, and associated skills and concepts.  
-    * Skills: ADTs of this type will include relevant resources and associated courses. For example, a Skill ADT for Matrix Multiplication might include lectures and quizzes on the topic, and additionally a list of courses for which knowledge of Matrix Multiplication is expected.  
-    * Concepts: ADTs of this type will be groups of prerequisite skills. A course may recommend students familiarize themselves with certain concepts, for example a course that requires students to be familiar with Matrix Algebra would recommend the Matrix Algebra concept, which would internally contain skills including Matrix Multiplication.  
-  * We will fill this database initially with data from QuACS:  
-    * Major requirements  
-    * Courses from the Course Catalog  
-    * Course Prerequisites  
-  * This data will also be organized by major and level, for easier traversal on the website.  
-  * Some of the data will be created by professors when they assign class prerequisites through the website.   
-    * Concepts  
-    * Skills  
-  * This data will be linked to the courses that the professors create it on initially, but once we have multiple concepts/skills, professors will be able to search it as a template library and use already-existing skills.  
-* Create a search page to allow users to find and search through everything in the uploaded content categories:  
-  * Skills  
-  * Concepts  
-  * Courses  
-  * Tracks  
-  * Majors  
-  * Departments  
-  * Later, Universities might be on this list
+```
+remember-pertinent-info/
+├── start.sh                    # One-command launcher
+├── client/public/
+│   ├── standalone.html         # Main app (complete, self-contained)
+│   ├── css/                    # Stylesheets (optional backend version)
+│   ├── js/                     # Scripts (optional backend version)
+│   └── images/                 # Logo and icons
+├── server/                     # Optional: PostgreSQL backend (advanced)
+└── README.md                   # This file
 
-### By the End of Semester
+**For basic use, you only need:**
+- `start.sh`
+- `client/public/standalone.html`
+```
 
-* Enable sign-in method for teachers/students  
-  * For testing in RPI’s ECSE department, set up with RPI SSO for RPI students and faculty to securely login  
-  * Utilize DUO verification for a more standardized login process  
-* Produce a means (a form of CMS) for professors to create and upload interactive content modules to the site, containing the following:  
-  * Formatted concept/skill categories (lecture-note style)  
-    * We plan to implement these in a modified markdown format, for ease of implementation and use.  
-    * We will also add an ability to import lecture notes for further ease of use here.  
-  * Quizzes for students to test their knowledge of these categories  
-    * These will have the option to be integrated inline with the lecture notes, or separated completely.  
-* Create a user database to store information about what students know and track it over time, linked to the SSO login.  
-* Outreach, try to get users to create content for the site/students.
+## 🔧 Technical Details
 
-## Team Members:
+### Data Source
+- **Repository:** github.com/quacs/quacs-data
+- **Updates:** Live from GitHub (always current)
+- **Coverage:** 5,800+ RPI courses
 
-Jacob Hudnut, [hudnuj@rpi.edu](mailto:hudnuj@rpi.edu), 4 credits  
-Oliver Centner, [centno@rpi.edu](mailto:centno@rpi.edu), 4 credits  
-Ronan Hevenor, [hevenr@rpi.edu](mailto:hevenr@rpi.edu), 2 credits  
-Dan Liu, [liuy77@rpi.edu](mailto:liuy77@rpi.edu), 2 credits
+### How It Works
+1. Fetches JSON data from QUACS GitHub repository
+2. Processes course, catalog, and prerequisite data
+3. Builds prerequisite tree recursively
+4. Displays everything in an interactive interface
+
+### Technologies
+- Pure HTML/CSS/JavaScript (no frameworks)
+- Fetches data client-side (no backend needed)
+- Responsive design (works on mobile)
+
+## 📊 Data Displayed
+
+When you click on a course, you see:
+
+**Course Info:**
+- Course code, subject, number
+- Full description
+- Department
+
+**For Each Section:**
+- CRN (Course Registration Number)
+- Section number
+- Credits
+- Capacity and remaining seats
+- Special attributes
+
+**For Each Timeslot:**
+- Instructor name
+- Meeting days (M, T, W, R, F)
+- Times (formatted: 10:00 AM - 11:50 AM)
+- Location (building and room)
+- Semester duration
+
+## 🎨 Visual Features
+
+- **Color-coded seats:**
+  - 🟢 Green = plenty available
+  - 🟠 Orange = <20% remaining
+  - 🔴 Red = full
+- **Prerequisite relationships** - AND/OR indicators
+- **Minimum grades** - Shows required grade for prerequisites
+- **Responsive layout** - Works on any screen size
+
+## 🛠️ Advanced Setup (Optional)
+
+If you want to add features like user accounts, custom study materials, or offline access:
+
+See `docs/ADVANCED_SETUP.md` for:
+- PostgreSQL database setup
+- Backend server configuration
+- Custom data import
+- User authentication
+
+**Note:** This is only needed for advanced features. The standalone version works great for most use cases!
+
+## 🔮 Future Enhancements
+
+Possible additions:
+1. User accounts and progress tracking
+2. Course topics and study materials
+3. Quizzes and practice problems
+4. Professor ratings integration
+5. Degree requirement mapping
+6. Course recommendation engine
+7. Historical enrollment data
+
+## 📝 Project Vision
+
+Our vision is to produce a web app that helps facilitate learning of various topics through:
+- Easy course discovery and prerequisite visualization
+- Study materials organized by course topics
+- Progress tracking for students
+- Resource sharing for professors
+
+See original project goals in `docs/PROJECT_VISION.md`
+
+## 👥 Team
+
+**Fall 2025 RCOS Project**
+
+- Jacob Hudnut - hudnuj@rpi.edu (4 credits)
+- Oliver Centner - centno@rpi.edu (4 credits)
+- Ronan Hevenor - hevenr@rpi.edu (2 credits)
+- Dan Liu - liuy77@rpi.edu (2 credits)
+
+## 📄 License
+
+MIT License - See LICENSE file
+
+## 🙏 Acknowledgments
+
+- **QUACS Team** - For providing comprehensive RPI course data
+- **RPI** - For course catalog information
+- **RCOS** - For project support
+
+## 🐛 Issues or Questions?
+
+For issues, feature requests, or questions, open an issue on GitHub.
+
+## 🚦 Getting Started Checklist
+
+- [ ] Run `./start.sh`
+- [ ] Search for a course
+- [ ] View the prerequisite tree
+- [ ] Click on a course node
+- [ ] Explore different courses
+- [ ] Try switching semesters
+
+**That's it! You're ready to explore RPI's course prerequisites!** 🎓
