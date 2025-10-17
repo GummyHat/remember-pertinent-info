@@ -625,34 +625,92 @@
          * @param {string} query - Search query (lowercase)
          */
         function searchCourses(query) {
-            // Search across course ID, name, and description
-            const results = Object.entries(coursesData)
-                .filter(([id, course]) => {
-                    const catalog = catalogData[id] || {};
-                    return id.toLowerCase().includes(query) ||
-                           (catalog.name || '').toLowerCase().includes(query) ||
-                           (catalog.description || '').toLowerCase().includes(query);
-                })
-                .slice(0, 20);
+          const q = (query || '').toLowerCase().trim();
+          const resultsDiv = document.getElementById('search-results');
+          if (!resultsDiv) return;
 
-            const resultsDiv = document.getElementById('search-results');
+          // Collect matches into three buckets (use Map to keep uniqueness & original order)
+          const idMatches = new Map();
+          const nameMatches = new Map();
+          const descMatches = new Map();
 
-            if (results.length === 0) {
-                resultsDiv.innerHTML = '<div class="search-result-item">No courses found</div>';
-            } else {
-                resultsDiv.innerHTML = results.map(([id, course]) => {
-                    const catalog = catalogData[id] || {};
-                    return `
-                        <div class="search-result-item" onclick="loadCourseTree('${id}')">
-                            <div style="font-weight: 600; color: var(--primary-color);">${id}</div>
-                            <div style="font-size: 0.9rem;">${catalog.name || 'Unknown Course'}</div>
-                        </div>
-                    `;
-                }).join('');
+          Object.entries(coursesData).forEach(([id, course]) => {
+            const catalog = catalogData[id] || {};
+            const idLower = (id || '').toLowerCase();
+            const nameLower = (catalog.name || '').toLowerCase();
+            const descLower = (catalog.description || '').toLowerCase();
+
+            if (!q) {
+              // If empty query, treat as all results (but still in prioritized order)
+              idMatches.set(id, { id, catalog });
+              return;
             }
 
-            resultsDiv.classList.add('active');
+            if (idLower.includes(q)) {
+              idMatches.set(id, { id, catalog });
+            } else if (nameLower.includes(q)) {
+              nameMatches.set(id, { id, catalog });
+            } else if (descLower.includes(q)) {
+              descMatches.set(id, { id, catalog });
+            }
+          });
+
+          // Merge up to 20 results in the desired order
+          const merged = [];
+          for (const m of [idMatches, nameMatches, descMatches]) {
+            for (const entry of m.values()) {
+              if (merged.length >= 20) break;
+              merged.push(entry);
+            }
+            if (merged.length >= 20) break;
+          }
+
+          // Clear previous results
+          resultsDiv.innerHTML = '';
+          resultsDiv.classList.add('active');
+
+          if (merged.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'search-result-item';
+            empty.textContent = 'No courses found';
+            resultsDiv.appendChild(empty);
+            return;
+          }
+        
+          // Build safe DOM nodes for results
+          merged.forEach(({ id, catalog }) => {
+            const item = document.createElement('div');
+            item.className = 'search-result-item';
+            item.tabIndex = 0; // make focusable for accessibility
+        
+            const idLine = document.createElement('div');
+            idLine.style.fontWeight = '600';
+            idLine.style.color = 'var(--primary-color)';
+            idLine.textContent = id;
+        
+            const nameLine = document.createElement('div');
+            nameLine.style.fontSize = '0.9rem';
+            nameLine.textContent = catalog.name || 'Unknown Course';
+        
+            item.appendChild(idLine);
+            item.appendChild(nameLine);
+        
+            // Use data attribute and event listener instead of inline onclick
+            item.dataset.courseId = id;
+            item.addEventListener('click', () => {
+              if (typeof loadCourseTree === 'function') loadCourseTree(id);
+            });
+            item.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (typeof loadCourseTree === 'function') loadCourseTree(id);
+              }
+            });
+
+            resultsDiv.appendChild(item);
+          });
         }
+
 
         // ============================================================================
         // PREREQUISITE TREE BUILDING
