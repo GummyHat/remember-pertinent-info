@@ -389,6 +389,7 @@
 <body>
     <header>
         <div class="container">
+            <img src = "logo.png" alt = "duck" style = "width:5%" onclick="quack.play();">
             <h1>🎓 RPI Course Prerequisite Tree</h1>
             <div>Live data from QUACS</div>
         </div>
@@ -438,6 +439,8 @@
     </div>
 
     <script>
+        //loading sound file for logo on click quack
+        var quack = new Audio('quack.mp3');
         // ============================================================================
         // CONFIGURATION
         // ============================================================================
