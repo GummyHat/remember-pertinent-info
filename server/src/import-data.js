@@ -172,7 +172,10 @@ async function importData() {
           prereqCount++;
         } catch (err) {
           // CRN might not exist in sections table, skip it
-          if (err.code !== '23503') { // Not a foreign key violation
+          if (err.code === '23503') {
+            // Foreign key violation - CRN doesn't exist in sections table
+            console.warn(`Skipping prerequisite for non-existent CRN ${crn}`);
+          } else {
             console.error(`Error importing prerequisite for CRN ${crn}:`, err.message);
           }
         }

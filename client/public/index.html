@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RPI Course Prerequisite Tree - Remember Pertinent Info</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,10 +111,32 @@
             padding: 12px 20px;
             cursor: pointer;
             border-bottom: 1px solid var(--shadow-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .search-result-item:hover { background: var(--bg-color); }
+        .search-result-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
 
+        .search-result-item:hover {
+            background: var(--bg-color);
+            padding-left: 30px;
+        }
+
+        .search-result-item:hover::before {
+            left: 100%;
+        }
+
+        /* Tree View Removed - List View Only */
         .tree-visualization {
             min-height: 400px;
             padding: 40px 20px;
@@ -122,99 +145,287 @@
             align-items: flex-start;
         }
 
-        .tree-node {
-            position: relative;
-            display: inline-block;
-            margin: 20px;
-        }
-
-        .tree-node-content {
-            background: var(--card-bg);
-            border: 2px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 15px 20px;
-            min-width: 200px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px var(--shadow-color);
-        }
-
-        .tree-node-content:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow-color);
-        }
-
-        .tree-node-content.root {
-            border-width: 3px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #0099ff 100%);
-            color: white;
-        }
-
-        .tree-node-content.root * { color: white; }
-
-        .node-code {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-
-        .node-title {
-            font-size: 0.9rem;
-            color: var(--text-color);
-        }
-
-        .tree-children {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 40px;
-            position: relative;
-        }
-
-        .tree-children::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            width: 2px;
-            height: 20px;
-            background: var(--primary-color);
-        }
-
-        .tree-child {
-            position: relative;
-            flex: 0 1 auto;
-        }
-
-        .tree-child::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            width: 2px;
-            height: 20px;
-            background: var(--primary-color);
-        }
-
         .loading {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 20px;
         }
 
         .spinner {
-            border: 4px solid var(--shadow-color);
-            border-top: 4px solid var(--primary-color);
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .spinner::before,
+        .spinner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            border: 3px solid transparent;
+            border-top-color: var(--primary-color);
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        .spinner::after {
+            border-top-color: #0099ff;
+            animation-delay: -0.6s;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Legend Removed - Tree View Only Component */
+
+        /* View Controls Removed - List View Only */
+
+        /* Flow Chart View Removed - List View Only */
+
+        /* Streamlined List View with Enhanced Readability */
+        .list-view {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px var(--shadow-color);
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bg-color);
+        }
+
+        .list-header h3 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .expand-btn, .collapse-btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: 2px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .expand-btn:hover, .collapse-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .list-item-wrapper {
+            position: relative;
+        }
+
+        .list-item {
+            padding: 10px 15px 10px 40px;
+            margin: 3px 0;
+            transition: all 0.2s ease;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+
+        .list-item.root {
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.08), rgba(0, 153, 255, 0.05));
+            border-left-color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding: 15px 20px 15px 45px;
+            font-size: 1.05rem;
+        }
+
+        .list-item.duplicate {
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        .list-item:hover:not(.root):not(.duplicate) {
+            background: rgba(0, 123, 255, 0.05);
+            border-left-color: var(--primary-color);
+            transform: translateX(2px);
+        }
+
+        .collapse-toggle {
+            position: absolute;
+            left: 10px;
+            cursor: pointer;
+            padding: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .collapse-toggle:hover {
+            background-color: rgba(0, 123, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .collapse-icon {
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .no-prereqs-spacer {
+            display: inline-block;
+            width: 30px;
+        }
+
+        .course-info {
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .depth-indicator {
+            color: rgba(0, 123, 255, 0.4);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .course-code {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .course-title {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .course-credits {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .min-grade {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .duplicate-indicator {
+            color: #888;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .depth-limit-indicator {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        .prereqs-container {
+            animation: slideDown 0.2s ease-out;
+            transform-origin: top;
+            border-left: 2px solid rgba(0, 123, 255, 0.1);
+            margin-left: 20px;
+            padding-left: 5px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: scaleY(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+
+        .no-prereqs-message {
+            padding: 15px 25px;
+            margin: 10px 0;
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            border-radius: 6px;
+            font-style: italic;
+        }
+
+        .alternatives-group {
+            background: rgba(255, 193, 7, 0.05);
+            border-left: 3px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+        }
+
+        .alternatives-label {
+            color: #f57c00;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Simplified indentation for better readability */
+        .list-item-level-1 {
+            margin-left: 0px;
+        }
+
+        .list-item-level-2 {
+            margin-left: 15px;
+        }
+
+        .list-item-level-3 {
+            margin-left: 30px;
+        }
+
+        .list-item-level-4 {
+            margin-left: 45px;
+            font-size: 0.92rem;
+        }
+
+        .list-item-level-5 {
+            margin-left: 60px;
+            font-size: 0.9rem;
+        }
+
+        .list-item-bullet {
+            display: inline-block;
+            margin-right: 10px;
+            color: var(--primary-color);
         }
 
         .status {
@@ -384,12 +595,242 @@
             border-radius: 8px;
             line-height: 1.8;
         }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .tree-node {
+                margin: 15px 10px;
+            }
+
+            .tree-node-content {
+                min-width: 180px;
+                max-width: 220px;
+                padding: 12px 16px;
+            }
+
+            .node-code {
+                font-size: 1.1rem;
+            }
+
+            .tree-children {
+                margin-top: 40px;
+                gap: 10px;
+            }
+
+            .legend {
+                bottom: auto;
+                top: 80px;
+                left: 10px;
+                max-width: 150px;
+                padding: 10px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .search-section h2 {
+                font-size: 1.3rem;
+            }
+
+            .tree-node-content {
+                min-width: 150px;
+                max-width: 180px;
+            }
+
+            .node-code::before,
+            .node-credits::before {
+                display: none;
+            }
+        }
+
+        /* Course Resources Section */
+        .resources-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid var(--shadow-color);
+        }
+
+        .resources-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .resource-upload-form {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .resource-upload-form h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select,
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--shadow-color);
+            border-radius: 4px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            margin-left: 10px;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .resources-list {
+            margin-top: 20px;
+        }
+
+        .resource-item {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .resource-info {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .resource-meta {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .resource-type-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: 10px;
+        }
+
+        .resource-type-slides { background: #e3f2fd; color: #1976d2; }
+        .resource-type-assignment { background: #fff3e0; color: #f57c00; }
+        .resource-type-syllabus { background: #f3e5f5; color: #7b1fa2; }
+        .resource-type-reading { background: #e8f5e9; color: #388e3c; }
+        .resource-type-other { background: #f5f5f5; color: #616161; }
+
+        @media (prefers-color-scheme: dark) {
+            .resource-meta {
+                color: #999;
+            }
+        }
+
+        .upload-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .upload-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .upload-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .toggle-upload-form {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <img src = "logo.png" alt = "duck" style = "width:5%" onclick="quack.play();">
+            <img src="images/logo.png" alt="RPI Duck Logo" style="height: 50px; cursor: pointer;" onclick="quack.play();">
             <h1>🎓 RPI Course Prerequisite Tree</h1>
             <div>Live data from QUACS</div>
         </div>
@@ -414,16 +855,25 @@
                 </div>
             </div>
 
+            <!-- View Toggle Buttons Removed - List View Only -->
+
             <div id="tree-visualization" class="tree-visualization">
                 <div class="loading" style="display: none;">
                     <div class="spinner"></div>
-                    <p>Loading course data...</p>
+                    <p>Building prerequisite tree...</p>
+                </div>
+                <div class="empty-state" id="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-color); opacity: 0.7;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">📚</div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 10px;">No Course Selected</h3>
+                    <p>Search for a course above to visualize its prerequisites</p>
                 </div>
             </div>
         </div>
     </main>
 
     <div id="status-message" class="status" style="display: none;"></div>
+
+    <!-- Legend Removed - Tree View Only -->
 
     <!-- Course Detail Modal -->
     <div id="course-modal" class="modal">
@@ -441,12 +891,17 @@
     <script>
         //loading sound file for logo on click quack
         var quack = new Audio('quack.mp3');
+        quack.onerror = function() {
+            console.warn('Audio file quack.mp3 not found - easter egg disabled');
+        };
+
         // ============================================================================
         // CONFIGURATION
         // ============================================================================
 
         // QUACS Data URLs - fetches live course data from GitHub
         const QUACS_BASE = 'https://raw.githubusercontent.com/quacs/quacs-data/master';
+        const MAX_TREE_DEPTH = 5; // Maximum prerequisite tree depth
 
         // ============================================================================
         // GLOBAL STATE
@@ -458,6 +913,9 @@
         let prerequisitesData = {};  // Prerequisites mapped by CRN
         let currentSemester = null;  // Will be auto-detected from QUACS
         let searchTimeout;           // Debounce timer for search
+        // View variable removed - List view only
+        let currentTreeData = null;  // Store current tree data for rendering
+        let uniqueIdCounter = 0;     // Counter for generating unique IDs
 
         // ============================================================================
         // INITIALIZATION
@@ -728,19 +1186,27 @@
             document.getElementById('course-search').value = courseId;
 
             const treeDiv = document.getElementById('tree-visualization');
+            const emptyState = document.getElementById('empty-state');
+
+            // Hide empty state and show loading
+            if (emptyState) emptyState.style.display = 'none';
             treeDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Building prerequisite tree...</p></div>';
 
             setTimeout(() => {
                 try {
                     const tree = buildPrerequisiteTree(courseId, 0, new Set());
                     if (tree) {
-                        treeDiv.innerHTML = renderTree(tree, true);
+                        currentTreeData = tree;
+                        renderCurrentView();
+                        showStatus(`Showing prerequisites for ${courseId}`, 'success');
                     } else {
                         treeDiv.innerHTML = '<div class="loading"><p>Course not found</p></div>';
+                        showStatus(`Course ${courseId} not found`, 'error');
                     }
                 } catch (error) {
                     console.error('Error building tree:', error);
                     treeDiv.innerHTML = `<div class="loading"><p>Error: ${error.message}</p></div>`;
+                    showStatus('Error building prerequisite tree', 'error');
                 }
             }, 100);
         }
@@ -754,7 +1220,7 @@
          */
         function buildPrerequisiteTree(courseId, depth, visited) {
             // Prevent infinite recursion and circular dependencies
-            if (depth > 5 || visited.has(courseId)) return null;
+            if (depth > MAX_TREE_DEPTH || visited.has(courseId)) return null;
             visited.add(courseId);
 
             const course = coursesData[courseId];
@@ -832,29 +1298,209 @@
          * @param {boolean} isRoot - Whether this is the root node
          * @returns {string} HTML string
          */
-        function renderTree(node, isRoot = false) {
+        /* Tree Rendering Function Removed - List View Only */
+
+        /**
+         * Render current view - List View Only
+         */
+        function renderCurrentView() {
+            if (!currentTreeData) return;
+
+            const treeDiv = document.getElementById('tree-visualization');
+            // Always render list view
+            treeDiv.innerHTML = renderListView(currentTreeData);
+        }
+
+        /* Flow Chart Function Removed - List View Only */
+
+        /**
+         * Render list view with improved readability and duplicate handling
+         */
+        function renderListView(node, level = 0, seenCourses = new Set(), parentPath = []) {
             if (!node) return '';
 
-            const hasPrereqs = node.prerequisites && node.prerequisites.length > 0;
+            // Create the current path
+            const currentPath = [...parentPath, node.id];
 
-            return `
-                <div class="tree-node">
-                    <div class="tree-node-content ${isRoot ? 'root' : ''}"
-                         onclick="showCourseDetail('${node.id}')"
-                         title="Click to view full course details">
-                        <div class="node-code">${node.id}</div>
-                        <div class="node-title">${node.title}</div>
-                        ${node.minGrade && !isRoot ? `<div style="font-size: 0.8rem; font-style: italic;">Min Grade: ${node.minGrade}</div>` : ''}
-                    </div>
-                    ${hasPrereqs ? `
-                        <div class="tree-children">
-                            ${node.prerequisites.map(prereq => `
-                                <div class="tree-child">${renderTree(prereq, false)}</div>
-                            `).join('')}
+            // Check if this course was already seen in this branch
+            const isDuplicate = seenCourses.has(node.id);
+
+            // Add to seen courses
+            const newSeenCourses = new Set(seenCourses);
+            newSeenCourses.add(node.id);
+
+            const catalog = catalogData[node.id] || {};
+            const credits = catalog.credits_min && catalog.credits_max
+                ? (catalog.credits_min === catalog.credits_max
+                    ? `${catalog.credits_min} cr`
+                    : `${catalog.credits_min}-${catalog.credits_max} cr`)
+                : '';
+
+            let html = '';
+
+            if (level === 0) {
+                // Reset for new tree
+                seenCourses.clear();
+                uniqueIdCounter = 0; // Reset ID counter for new tree
+                html += '<div class="list-view">';
+                html += `
+                    <div class="list-header">
+                        <h3>📋 Prerequisites for ${node.id}</h3>
+                        <div class="view-controls">
+                            <button class="expand-btn" onclick="expandAllPrereqs()">
+                                <span style="font-size: 1.1rem;">⊕</span> Expand All
+                            </button>
+                            <button class="collapse-btn" onclick="collapseAllPrereqs()">
+                                <span style="font-size: 1.1rem;">⊖</span> Collapse All
+                            </button>
                         </div>
-                    ` : ''}
-                </div>
+                    </div>
+                `;
+            }
+
+            const hasPrereqs = node.prerequisites && node.prerequisites.length > 0 && !isDuplicate && level < 4;
+            const levelClass = level > 0 ? `list-item-level-${Math.min(level, 5)}` : '';
+            const uniqueId = `course-${node.id.replace(/[^a-zA-Z0-9]/g, '-')}-${level}-${uniqueIdCounter++}`;
+
+            // Determine visual indicators
+            const depthIndicator = level > 0 ? '├─' : '';
+            const courseTypeClass = level === 0 ? 'root' : isDuplicate ? 'duplicate' : '';
+
+            html += `
+                <div class="list-item-wrapper">
+                    <div class="list-item ${courseTypeClass} ${levelClass}" data-course-id="${node.id}">
+                        ${hasPrereqs ? `
+                            <span class="collapse-toggle" onclick="togglePrereqs(event, '${uniqueId}')" aria-expanded="true">
+                                <span class="collapse-icon">▼</span>
+                            </span>
+                        ` : '<span class="no-prereqs-spacer"></span>'}
+                        <span class="course-info" onclick="showCourseDetail('${node.id}')">
+                            <span class="depth-indicator">${depthIndicator}</span>
+                            <strong class="course-code">${node.id}</strong>
+                            <span class="course-title">${node.title}</span>
+                            ${credits ? ` <span class="course-credits">(${credits})</span>` : ''}
+                            ${node.minGrade && level > 0 ? ` <span class="min-grade">Min: ${node.minGrade}</span>` : ''}
+                            ${isDuplicate ? ' <span class="duplicate-indicator" title="Already shown above">(see above)</span>' : ''}
+                            ${level >= 4 && hasPrereqs ? ' <span class="depth-limit-indicator">(...)</span>' : ''}
+                        </span>
+                    </div>
             `;
+
+            // Only show prerequisites if not a duplicate and within depth limit
+            if (hasPrereqs && !isDuplicate) {
+                html += `<div class="prereqs-container" id="${uniqueId}">`;
+
+                // Group prerequisites by type if there are many
+                const prereqGroups = groupPrerequisites(node.prerequisites);
+
+                if (prereqGroups.required.length > 0) {
+                    prereqGroups.required.forEach(prereq => {
+                        html += renderListView(prereq, level + 1, newSeenCourses, currentPath);
+                    });
+                }
+
+                if (prereqGroups.alternatives.length > 0) {
+                    html += `<div class="alternatives-group">
+                        <span class="alternatives-label">OR one of:</span>`;
+                    prereqGroups.alternatives.forEach(prereq => {
+                        html += renderListView(prereq, level + 1, newSeenCourses, currentPath);
+                    });
+                    html += '</div>';
+                }
+
+                html += '</div>';
+            } else if (level === 0 && !hasPrereqs) {
+                html += '<div class="no-prereqs-message">✓ No prerequisites required</div>';
+            }
+
+            html += '</div>'; // Close list-item-wrapper
+
+            if (level === 0) {
+                html += '</div>';
+            }
+
+            return html;
+        }
+
+        /**
+         * Group prerequisites into required and alternatives
+         */
+        function groupPrerequisites(prerequisites) {
+            // Simple grouping - can be enhanced based on actual data structure
+            return {
+                required: prerequisites.filter(p => !p.isAlternative),
+                alternatives: prerequisites.filter(p => p.isAlternative)
+            };
+        }
+
+        /**
+         * Toggle prerequisites visibility
+         */
+        function togglePrereqs(event, containerId) {
+            event.stopPropagation();
+            const container = document.getElementById(containerId);
+            const icon = event.currentTarget.querySelector('.collapse-icon');
+
+            if (container.style.display === 'none') {
+                // Expanding
+                container.style.display = 'block';
+                icon.textContent = '▼';
+                event.currentTarget.setAttribute('aria-expanded', 'true');
+            } else {
+                // Collapsing - also collapse all nested prerequisites
+                container.style.display = 'none';
+                icon.textContent = '▶';
+                event.currentTarget.setAttribute('aria-expanded', 'false');
+
+                // Find and collapse all nested prerequisite containers
+                const nestedContainers = container.querySelectorAll('.prereqs-container');
+                const nestedIcons = container.querySelectorAll('.collapse-icon');
+
+                nestedContainers.forEach(nested => {
+                    nested.style.display = 'none';
+                });
+
+                nestedIcons.forEach(nestedIcon => {
+                    nestedIcon.textContent = '▶';
+                    if (nestedIcon.parentElement) {
+                        nestedIcon.parentElement.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        }
+
+        /**
+         * Expand all prerequisite sections
+         */
+        function expandAllPrereqs() {
+            const containers = document.querySelectorAll('.prereqs-container');
+            const icons = document.querySelectorAll('.collapse-icon');
+
+            containers.forEach(container => {
+                container.style.display = 'block';
+            });
+
+            icons.forEach(icon => {
+                icon.textContent = '▼';
+                icon.parentElement.setAttribute('aria-expanded', 'true');
+            });
+        }
+
+        /**
+         * Collapse all prerequisite sections
+         */
+        function collapseAllPrereqs() {
+            const containers = document.querySelectorAll('.prereqs-container');
+            const icons = document.querySelectorAll('.collapse-icon');
+
+            containers.forEach(container => {
+                container.style.display = 'none';
+            });
+
+            icons.forEach(icon => {
+                icon.textContent = '▶';
+                icon.parentElement.setAttribute('aria-expanded', 'false');
+            });
         }
 
         /**
@@ -880,7 +1526,7 @@
          * Shows: description, sections, CRNs, instructors, times, seats, etc.
          * @param {string} courseId - Course ID to display
          */
-        function showCourseDetail(courseId) {
+        async function showCourseDetail(courseId) {
             const modal = document.getElementById('course-modal');
             const modalTitle = document.getElementById('modal-title');
             const modalBody = document.getElementById('modal-body');
@@ -1036,8 +1682,369 @@
                 html += '<p style="margin-top: 20px; font-style: italic; color: #666;">No sections available for this course in the selected semester.</p>';
             }
 
+            // Add resources section
+            html += await buildResourcesSection(courseId);
+
             modalBody.innerHTML = html;
             modal.classList.add('active');
+
+            // Attach event listeners for resources section
+            attachResourceEventListeners(courseId);
+        }
+
+        // ============================================================================
+        // COURSE RESOURCES FUNCTIONS
+        // ============================================================================
+
+        const API_BASE_URL = 'http://localhost:3001/api';
+
+        /**
+         * Build the HTML for the resources section
+         * @param {string} courseId - Course ID to fetch resources for
+         * @returns {string} HTML for resources section
+         */
+        async function buildResourcesSection(courseId) {
+            let html = `
+                <div class="resources-section">
+                    <h3>Course Resources</h3>
+
+                    <div class="toggle-upload-form">
+                        <button class="btn btn-primary" id="toggle-upload-btn">
+                            Upload New Resource
+                        </button>
+                    </div>
+
+                    <div class="resource-upload-form" id="upload-form-container" style="display: none;">
+                        <h4>Upload Resource</h4>
+                        <form id="resource-upload-form">
+                            <div class="form-group">
+                                <label for="resource-title">Title *</label>
+                                <input type="text" id="resource-title" name="title" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="resource-description">Description</label>
+                                <textarea id="resource-description" name="description"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="resource-type">Type</label>
+                                <select id="resource-type" name="resourceType">
+                                    <option value="slides">Slides</option>
+                                    <option value="assignment">Assignment</option>
+                                    <option value="syllabus">Syllabus</option>
+                                    <option value="reading">Reading Material</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="uploader-name">Your Name (optional)</label>
+                                <input type="text" id="uploader-name" name="uploaderName" placeholder="Anonymous">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="resource-file">File *</label>
+                                <input type="file" id="resource-file" name="file" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="upload-btn">
+                                Upload
+                            </button>
+                        </form>
+                        <div class="upload-status" id="upload-status"></div>
+                    </div>
+
+                    <div class="resources-list" id="resources-list">
+                        <p style="text-align: center; color: #666;">Loading resources...</p>
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        /**
+         * Fetch resources for a course from the API
+         * @param {string} courseId - Course ID to fetch resources for
+         * @returns {Array} Array of resource objects
+         */
+        async function fetchResources(courseId) {
+            try {
+                const fetchUrl = `${API_BASE_URL}/courses/${courseId}/resources`;
+                console.log('Fetching resources from:', fetchUrl);
+
+                const response = await fetch(fetchUrl);
+                console.log('Fetch response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch resources: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched resources:', data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching resources:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Display resources in the resources list
+         * @param {string} courseId - Course ID
+         */
+        async function displayResources(courseId) {
+            const resourcesList = document.getElementById('resources-list');
+            if (!resourcesList) return;
+
+            resourcesList.innerHTML = '<p style="text-align: center; color: #666;">Loading resources...</p>';
+
+            const resources = await fetchResources(courseId);
+
+            if (resources.length === 0) {
+                resourcesList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No resources available for this course yet.</p>';
+                return;
+            }
+
+            let html = '';
+            resources.forEach(resource => {
+                const uploadDate = new Date(resource.uploaded_at).toLocaleDateString();
+                const fileSize = formatFileSize(resource.file_size);
+
+                // Escape user-provided content to prevent XSS
+                const safeTitle = escapeHtml(resource.title);
+                const safeDescription = escapeHtml(resource.description);
+                const safeFilename = escapeHtml(resource.filename);
+                const safeUploaderName = escapeHtml(resource.uploader_name) || 'Anonymous';
+                const safeResourceType = escapeHtml(resource.resource_type);
+
+                html += `
+                    <div class="resource-item">
+                        <div class="resource-info">
+                            <div class="resource-title">
+                                <span class="resource-type-badge resource-type-${safeResourceType}">
+                                    ${safeResourceType}
+                                </span>
+                                ${safeTitle}
+                            </div>
+                            ${safeDescription ? `<div style="margin: 5px 0;">${safeDescription}</div>` : ''}
+                            <div class="resource-meta">
+                                ${safeFilename} • ${fileSize} • Uploaded by ${safeUploaderName} on ${uploadDate}
+                            </div>
+                        </div>
+                        <div class="resource-actions">
+                            <button class="btn btn-primary download-resource-btn" data-resource-id="${resource.id}">
+                                Download
+                            </button>
+                            <button class="btn btn-danger delete-resource-btn" data-resource-id="${resource.id}">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resourcesList.innerHTML = html;
+        }
+
+        /**
+         * Attach event listeners for resources section
+         * @param {string} courseId - Course ID
+         */
+        function attachResourceEventListeners(courseId) {
+            // Toggle upload form
+            const toggleBtn = document.getElementById('toggle-upload-btn');
+            const formContainer = document.getElementById('upload-form-container');
+
+            if (toggleBtn && formContainer) {
+                toggleBtn.addEventListener('click', () => {
+                    const isHidden = formContainer.style.display === 'none';
+                    formContainer.style.display = isHidden ? 'block' : 'none';
+                    toggleBtn.textContent = isHidden ? 'Hide Upload Form' : 'Upload New Resource';
+                });
+            }
+
+            // Handle form submission
+            const uploadForm = document.getElementById('resource-upload-form');
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await handleResourceUpload(courseId);
+                });
+            }
+
+            // Load and display resources
+            displayResources(courseId);
+
+            // Attach download and delete handlers using event delegation
+            const resourcesList = document.getElementById('resources-list');
+            if (resourcesList) {
+                resourcesList.addEventListener('click', async (e) => {
+                    if (e.target.classList.contains('download-resource-btn')) {
+                        const resourceId = e.target.dataset.resourceId;
+                        await downloadResource(resourceId);
+                    } else if (e.target.classList.contains('delete-resource-btn')) {
+                        const resourceId = e.target.dataset.resourceId;
+                        if (confirm('Are you sure you want to delete this resource?')) {
+                            await deleteResource(resourceId, courseId);
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
+         * Handle resource upload
+         * @param {string} courseId - Course ID
+         */
+        async function handleResourceUpload(courseId) {
+            const form = document.getElementById('resource-upload-form');
+            const uploadBtn = document.getElementById('upload-btn');
+            const statusDiv = document.getElementById('upload-status');
+
+            if (!form || !uploadBtn || !statusDiv) {
+                console.error('Upload form elements not found');
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            // Debug logging
+            console.log('Uploading resource for course:', courseId);
+            console.log('Form data:', {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                resourceType: formData.get('resourceType'),
+                uploaderName: formData.get('uploaderName'),
+                file: formData.get('file')?.name
+            });
+
+            // Disable submit button during upload
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+            statusDiv.className = 'upload-status';
+            statusDiv.style.display = 'none';
+
+            try {
+                const uploadUrl = `${API_BASE_URL}/courses/${courseId}/resources`;
+                console.log('Uploading to:', uploadUrl);
+
+                const response = await fetch(uploadUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                // Try to parse JSON, but handle cases where response is not JSON
+                let result;
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+
+                try {
+                    result = JSON.parse(responseText);
+                    console.log('Response data:', result);
+                } catch (jsonError) {
+                    console.error('Failed to parse JSON response:', jsonError);
+                    console.error('Raw response was:', responseText);
+                    throw new Error(`Server returned non-JSON response: ${responseText.substring(0, 200)}`);
+                }
+
+                if (response.ok) {
+                    statusDiv.className = 'upload-status success';
+                    statusDiv.textContent = 'Resource uploaded successfully!';
+                    form.reset();
+
+                    // Refresh resources list
+                    await displayResources(courseId);
+
+                    // Hide form after 2 seconds
+                    setTimeout(() => {
+                        const formContainer = document.getElementById('upload-form-container');
+                        const toggleBtn = document.getElementById('toggle-upload-btn');
+                        if (formContainer) formContainer.style.display = 'none';
+                        if (toggleBtn) toggleBtn.textContent = 'Upload New Resource';
+                    }, 2000);
+                } else {
+                    throw new Error(result.error || `Upload failed with status ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                statusDiv.className = 'upload-status error';
+                statusDiv.textContent = `Error: ${error.message}`;
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload';
+            }
+        }
+
+        /**
+         * Download a resource
+         * @param {string} resourceId - Resource ID to download
+         */
+        async function downloadResource(resourceId) {
+            try {
+                window.open(`${API_BASE_URL}/resources/${resourceId}/download`, '_blank');
+            } catch (error) {
+                console.error('Error downloading resource:', error);
+                alert('Failed to download resource');
+            }
+        }
+
+        /**
+         * Delete a resource
+         * @param {string} resourceId - Resource ID to delete
+         * @param {string} courseId - Course ID to refresh after deletion
+         */
+        async function deleteResource(resourceId, courseId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/resources/${resourceId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    await displayResources(courseId);
+                } else {
+                    const result = await response.json();
+                    throw new Error(result.error || 'Delete failed');
+                }
+            } catch (error) {
+                console.error('Error deleting resource:', error);
+                alert(`Failed to delete resource: ${error.message}`);
+            }
+        }
+
+        /**
+         * Escape HTML to prevent XSS attacks
+         * @param {string} unsafe - Unsafe string that may contain HTML
+         * @returns {string} HTML-escaped string
+         */
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        /**
+         * Format file size in human-readable format
+         * @param {number} bytes - File size in bytes
+         * @returns {string} Formatted file size
+         */
+        function formatFileSize(bytes) {
+            if (!bytes) return 'Unknown size';
+
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            if (bytes === 0) return '0 Bytes';
+
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
         }
 
         // ============================================================================
@@ -1080,13 +2087,16 @@
         // EVENT LISTENERS
         // ============================================================================
 
-        // Close search results when clicking outside the search area
-        document.addEventListener('click', (e) => {
-            const search = document.getElementById('course-search');
-            const results = document.getElementById('search-results');
-            if (!search.contains(e.target) && !results.contains(e.target)) {
-                results.classList.remove('active');
-            }
+        // View toggle removed - List view only
+        document.addEventListener('DOMContentLoaded', () => {
+            // Close search results when clicking outside the search area
+            document.addEventListener('click', (e) => {
+                const search = document.querySelector('.search-container');
+                const results = document.getElementById('search-results');
+                if (search && results && !search.contains(e.target) && !results.contains(e.target)) {
+                    results.classList.remove('active');
+                }
+            });
         });
 
         // ============================================================================
