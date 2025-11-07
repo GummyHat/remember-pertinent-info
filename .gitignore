@@ -1,0 +1,21 @@
+# Environment variables (contains secrets)
+.env
+server/.env
+
+# Dependencies
+node_modules/
+server/node_modules/
+
+# Uploads directory (user-generated content)
+server/uploads/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Claude Code configuration
+.claude/
+
+# Temporary files
+/tmp/
+*.tmp
