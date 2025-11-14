@@ -742,6 +742,17 @@
             background: #c82333;
         }
 
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
         .resources-list {
             margin-top: 20px;
         }
@@ -825,12 +836,152 @@
         .toggle-upload-form {
             margin-bottom: 15px;
         }
+        /* Skeleton loading styles */
+        .skeleton {
+            animation: skeleton-loading 1s linear infinite alternate;
+            background: linear-gradient(
+                90deg,
+                rgba(190, 190, 190, 0.2) 0%,
+                rgba(190, 190, 190, 0.3) 50%,
+                rgba(190, 190, 190, 0.2) 100%
+            );
+            border-radius: 4px;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .skeleton-card {
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Resource preview modal */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+        }
+
+        .preview-modal.active {
+            display: flex;
+            animation: fadeIn 0.2s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .preview-content {
+            margin: auto;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            background: white;  /* Always white for better readability */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .preview-header {
+            padding: 15px 20px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-body {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+            background: white;
+            color: #333;  /* Force dark text for readability */
+        }
+
+        .preview-body iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+
+        .preview-body img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .preview-body pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #f5f5f5;
+            color: #333;  /* Dark text for code/text preview */
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            border: 1px solid #ddd;
+        }
+
+        /* Keyboard shortcuts help */
+        .keyboard-help {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--card-bg);
+            padding: 10px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            font-size: 0.85rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .keyboard-help:hover {
+            opacity: 1;
+        }
+
+        .keyboard-help kbd {
+            background: var(--bg-color);
+            border: 1px solid var(--shadow-color);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            margin: 0 2px;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <img src="logo.png" alt="Studious Duck" style="height: 50px; cursor: pointer;" onclick="quack.play();">
+            <img src="images/logo.png" alt="Studious Duck" style="height: 50px; cursor: pointer;" onclick="quack.play();">
             <h1>🎓 RPI Course Prerequisite Tree</h1>
             <div>Live data from QUACS</div>
         </div>
@@ -886,6 +1037,29 @@
                 Loading...
             </div>
         </div>
+    </div>
+
+    <!-- Resource Preview Modal -->
+    <div id="preview-modal" class="preview-modal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <h3 id="preview-title">Preview</h3>
+                <button onclick="closePreview()" style="background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <div class="preview-body" id="preview-body">
+                <div style="text-align: center; padding: 40px; color: #333;">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 20px; color: #333;">Loading preview...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Help -->
+    <div class="keyboard-help">
+        <div><kbd>/</kbd> Focus search</div>
+        <div><kbd>ESC</kbd> Close modals</div>
+        <div><kbd>↑↓</kbd> Navigate results</div>
     </div>
 
     <script>
@@ -1075,8 +1249,12 @@
 
             if (query.length < 2) {
                 document.getElementById('search-results').classList.remove('active');
+                searchResultIndex = -1;
                 return;
             }
+
+            // Show skeleton loading immediately for better UX
+            showSearchSkeleton();
 
             searchTimeout = setTimeout(() => searchCourses(query), 300);
         });
@@ -1798,6 +1976,9 @@
             const resourcesList = document.getElementById('resources-list');
             if (!resourcesList) return;
 
+            // Show skeleton loading state
+            showResourcesSkeleton();
+
             resourcesList.innerHTML = '<p style="text-align: center; color: #666;">Loading resources...</p>';
 
             const resources = await fetchResources(courseId);
@@ -1819,6 +2000,14 @@
                 const safeUploaderName = escapeHtml(resource.uploader_name) || 'Anonymous';
                 const safeResourceType = escapeHtml(resource.resource_type);
 
+                // Check if file is previewable
+                const isPreviewable = resource.file_type && (
+                    resource.file_type.includes('pdf') ||
+                    resource.file_type.includes('image') ||
+                    resource.file_type.includes('text') ||
+                    resource.file_type.includes('json')
+                );
+
                 html += `
                     <div class="resource-item">
                         <div class="resource-info">
@@ -1834,11 +2023,20 @@
                             </div>
                         </div>
                         <div class="resource-actions">
+                            ${isPreviewable ? `
+                                <button class="btn btn-secondary preview-resource-btn"
+                                    data-resource-id="${resource.id}"
+                                    data-filename="${safeFilename}"
+                                    data-filetype="${resource.file_type}"
+                                    title="Preview file">
+                                    👁️ Preview
+                                </button>
+                            ` : ''}
                             <button class="btn btn-primary download-resource-btn" data-resource-id="${resource.id}">
-                                Download
+                                ⬇️ Download
                             </button>
                             <button class="btn btn-danger delete-resource-btn" data-resource-id="${resource.id}">
-                                Delete
+                                🗑️ Delete
                             </button>
                         </div>
                     </div>
@@ -1877,7 +2075,7 @@
             // Load and display resources
             displayResources(courseId);
 
-            // Attach download and delete handlers using event delegation
+            // Attach download, delete, and preview handlers using event delegation
             const resourcesList = document.getElementById('resources-list');
             if (resourcesList) {
                 resourcesList.addEventListener('click', async (e) => {
@@ -1889,6 +2087,11 @@
                         if (confirm('Are you sure you want to delete this resource?')) {
                             await deleteResource(resourceId, courseId);
                         }
+                    } else if (e.target.classList.contains('preview-resource-btn')) {
+                        const resourceId = e.target.dataset.resourceId;
+                        const filename = e.target.dataset.filename;
+                        const filetype = e.target.dataset.filetype;
+                        await previewResource(resourceId, filename, filetype);
                     }
                 });
             }
@@ -1989,7 +2192,7 @@
                 window.open(`${API_BASE_URL}/resources/${resourceId}/download`, '_blank');
             } catch (error) {
                 console.error('Error downloading resource:', error);
-                alert('Failed to download resource');
+                showStatus('Failed to download resource. Please try again.', 'error');
             }
         }
 
@@ -2012,7 +2215,7 @@
                 }
             } catch (error) {
                 console.error('Error deleting resource:', error);
-                alert(`Failed to delete resource: ${error.message}`);
+                showStatus(`Failed to delete resource: ${error.message}`, 'error');
             }
         }
 
@@ -2084,6 +2287,154 @@
         }
 
         // ============================================================================
+        // RESOURCE PREVIEW FUNCTIONS
+        // ============================================================================
+
+        /**
+         * Preview a resource in a modal
+         * @param {number} resourceId - Resource ID
+         * @param {string} filename - File name
+         * @param {string} fileType - MIME type
+         */
+        async function previewResource(resourceId, filename, fileType) {
+            const modal = document.getElementById('preview-modal');
+            const titleEl = document.getElementById('preview-title');
+            const bodyEl = document.getElementById('preview-body');
+
+            titleEl.textContent = filename;
+            bodyEl.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading preview...</p></div>';
+            modal.classList.add('active');
+
+            try {
+                const previewUrl = `${API_BASE_URL}/resources/${resourceId}/preview`;
+
+                if (fileType.includes('pdf')) {
+                    bodyEl.innerHTML = `<iframe src="${previewUrl}" style="width: 100%; height: 600px; border: none;"></iframe>`;
+                } else if (fileType.includes('image')) {
+                    bodyEl.innerHTML = `<img src="${previewUrl}" alt="${filename}" style="max-width: 100%; height: auto;">`;
+                } else if (fileType.includes('text') || fileType.includes('json')) {
+                    const response = await fetch(previewUrl);
+                    const text = await response.text();
+                    // Use the existing escapeHtml function that handles null/undefined
+                    bodyEl.innerHTML = `<pre>${escapeHtml(text)}</pre>`;
+                } else {
+                    bodyEl.innerHTML = '<p>Preview not available for this file type. Please download to view.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading preview:', error);
+                bodyEl.innerHTML = '<p>Error loading preview. Please try downloading the file instead.</p>';
+            }
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').classList.remove('active');
+        }
+
+        // ============================================================================
+        // KEYBOARD SHORTCUTS
+        // ============================================================================
+
+        let searchResultIndex = -1;
+        let searchResultElements = [];
+
+        document.addEventListener('keydown', (e) => {
+            // Focus search with '/' key
+            if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                document.getElementById('course-search').focus();
+            }
+
+            // Close modals with ESC key
+            if (e.key === 'Escape') {
+                const courseModal = document.getElementById('course-modal');
+                const previewModal = document.getElementById('preview-modal');
+                const searchResults = document.getElementById('search-results');
+
+                if (previewModal.classList.contains('active')) {
+                    previewModal.classList.remove('active');
+                } else if (courseModal.classList.contains('active')) {
+                    courseModal.classList.remove('active');
+                } else if (searchResults.classList.contains('active')) {
+                    searchResults.classList.remove('active');
+                    searchResultIndex = -1;
+                }
+            }
+
+            // Navigate search results with arrow keys
+            if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && document.getElementById('search-results').classList.contains('active')) {
+                e.preventDefault();
+                searchResultElements = Array.from(document.querySelectorAll('.search-result-item'));
+
+                if (searchResultElements.length === 0) return;
+
+                // Remove previous selection
+                if (searchResultIndex >= 0) {
+                    searchResultElements[searchResultIndex].style.background = '';
+                }
+
+                // Update index
+                if (e.key === 'ArrowDown') {
+                    searchResultIndex = (searchResultIndex + 1) % searchResultElements.length;
+                } else {
+                    searchResultIndex = searchResultIndex <= 0 ? searchResultElements.length - 1 : searchResultIndex - 1;
+                }
+
+                // Highlight new selection
+                searchResultElements[searchResultIndex].style.background = 'var(--bg-color)';
+                searchResultElements[searchResultIndex].scrollIntoView({ block: 'nearest' });
+            }
+
+            // Select search result with Enter key
+            if (e.key === 'Enter' && searchResultIndex >= 0 && searchResultElements[searchResultIndex]) {
+                e.preventDefault();
+                searchResultElements[searchResultIndex].click();
+            }
+        });
+
+        // ============================================================================
+        // LOADING STATES
+        // ============================================================================
+
+        /**
+         * Show skeleton loading state for resources
+         */
+        function showResourcesSkeleton() {
+            const resourcesList = document.getElementById('resources-list');
+            if (!resourcesList) return;
+
+            let skeletonHTML = '';
+            for (let i = 0; i < 3; i++) {
+                skeletonHTML += `
+                    <div class="skeleton-card">
+                        <div class="skeleton skeleton-text" style="width: 60%;"></div>
+                        <div class="skeleton skeleton-text" style="width: 40%;"></div>
+                        <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                    </div>
+                `;
+            }
+            resourcesList.innerHTML = skeletonHTML;
+        }
+
+        /**
+         * Show skeleton loading state for search results
+         */
+        function showSearchSkeleton() {
+            const searchResults = document.getElementById('search-results');
+            if (!searchResults) return;
+
+            let skeletonHTML = '';
+            for (let i = 0; i < 5; i++) {
+                skeletonHTML += `
+                    <div class="search-result-item">
+                        <div class="skeleton skeleton-text" style="width: ${40 + Math.random() * 40}%;"></div>
+                    </div>
+                `;
+            }
+            searchResults.innerHTML = skeletonHTML;
+            searchResults.classList.add('active');
+        }
+
+        // ============================================================================
         // EVENT LISTENERS
         // ============================================================================
 
@@ -2095,6 +2446,15 @@
                 const results = document.getElementById('search-results');
                 if (search && results && !search.contains(e.target) && !results.contains(e.target)) {
                     results.classList.remove('active');
+                    searchResultIndex = -1;
+                }
+            });
+
+            // Close preview modal when clicking outside
+            const previewModal = document.getElementById('preview-modal');
+            previewModal.addEventListener('click', (e) => {
+                if (e.target === previewModal) {
+                    previewModal.classList.remove('active');
                 }
             });
         });

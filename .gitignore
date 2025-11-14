@@ -1,21 +1,53 @@
 # Environment variables (contains secrets)
 .env
+.env.local
 server/.env
+*.env
 
 # Dependencies
 node_modules/
 server/node_modules/
+client/node_modules/
 
 # Uploads directory (user-generated content)
 server/uploads/
+uploads/
 
 # Logs
+logs/
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Claude Code configuration
 .claude/
 
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing/validation scripts (optional - you can remove these lines if you want to include them)
+verify_code.js
+final_check.js
+
 # Temporary files
 /tmp/
 *.tmp
+*.temp
+
+# Optional - Uncomment if you want to exclude package-lock.json
+# package-lock.json
+# server/package-lock.json
