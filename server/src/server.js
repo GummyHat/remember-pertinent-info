@@ -31,6 +31,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' })); // Limit request body size
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../../client/public')));
+
 // Configure multer for file uploads
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 
